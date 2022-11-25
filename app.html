@@ -1,0 +1,55 @@
+<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="app.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="https://www.unpkg.com/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="d-flex justify-content-center">ELA Worksheet Generator</h1>
+
+        <div id="input-methods">
+            <div id="selection-btns" class="d-flex justify-content-center">
+                <button id="raw-text-select" class="btn btn-primary border">Generate worksheet using raw text</button>
+                <button id="url-api-select" class="btn btn-primary border">Generate worksheet using url</button>
+            </div>
+
+            <form id="raw-text-method" class="d-none">
+                <textarea class="form-control" type="text" placeholder="Copy and paste raw text into this input field."
+                    id="text-input" rows="3"></textarea>
+                <button id="text-input-btn">Enter</button>
+            </form>
+            <form id="url-api-method" class="d-none">
+                <p class="first">Please enter the URL of website with desired article.</p>
+
+                <input type="text" placeholder="URL" />
+                <button>Enter</button>
+            </form>
+        </div>
+
+        <div id="worksheet-container">
+            <div id="worksheet-text" class="row">
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
+
+</html>
