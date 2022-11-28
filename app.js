@@ -25,9 +25,9 @@ function createButtonRow() {
 
     const btnClasses = "col btn btn-primary border";
     const $postTextBtns = $(".questions-print-btns");
-    appendBtn($postTextBtns, btnClasses, "Create multiple choice question");
-    appendBtn($postTextBtns, btnClasses, "Create short response question");
-    appendBtn($postTextBtns, btnClasses, "Print Worksheet");
+    appendBtn($postTextBtns, btnClasses, "Create multiple choice question", "mult-choice-btn");
+    appendBtn($postTextBtns, btnClasses, "Create short response question", "short-response-btn");
+    appendBtn($postTextBtns, btnClasses, "Print Worksheet", "print-btn");
 
 }
 
@@ -67,9 +67,10 @@ function appendIcon(parent, className) {
 }
 
 //appends a button
-function appendBtn(parent, className, text) {
+function appendBtn(parent, className, text, idName) {
     parent.append($("<button>", {
         class: className,
+        id: idName,
         text: text
     }))
 }
@@ -104,4 +105,14 @@ $worksheetContainer.on("click", ".close-btn", function (evt) {
     $(evt.target).parent().remove();
 })
 
+
+
+//button to create short response question. clicking it creates an input field for a question and a confirm button. When you click confirm it adds a row, and then appends to that row a 1 column div with the number of the question, the question text that takes up 10 columns and an x icon one that can remove it if you want. The first two are content editable
+
+$("#short-response-btn").on("click", createShortResponseQuestion)
+
+function createShortResponseQuestion(e) {
+    e.preventDefault();
+
+}
 
