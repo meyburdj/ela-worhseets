@@ -31,9 +31,11 @@ function createButtonRow() {
 
 }
 
-//takes raw text and splits it into an array of paragraphs
+//takes raw text, splits it into an array of paragraphs, and filters away empty arrays
 function createParagraphArray(input) {
-    return input.split("\n\n");
+    let textArrayRaw = input.split("\\n");
+    let textArrayFiltered = textArrayRaw.filter((str => str !== ""));
+    return textArrayFiltered;
 }
 
 //appends a div with the row class

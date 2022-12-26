@@ -58,13 +58,13 @@ class User(db.Model):
 
     worksheets = db.relationship('Worksheet', backref="user")
 
-    followers = db.relationship(
-        "User",
-        secondary="follows",
-        primaryjoin=(Follows.user_being_followed_id == id),
-        secondaryjoin=(Follows.user_following_id == id),
-        backref="following",
-    )
+    # followers = db.relationship(
+    #     "User",
+    #     secondary="follows",
+    #     primaryjoin=(Follows.user_being_followed_id == id),
+    #     secondaryjoin=(Follows.user_following_id == id),
+    #     backref="following",
+    # )
 
     liked_worksheets = db.relationship(
         'Message',
@@ -87,6 +87,7 @@ class User(db.Model):
         user = User(
             username=username,
             email=email,
+            bio=bio,
             password=hashed_pwd,
             image_url=image_url,
         )

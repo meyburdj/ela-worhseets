@@ -31,3 +31,31 @@ toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 db.create_all()
+
+@app.route('/signup', methods = ['POST','GET'])
+def signup():
+    form = UserSignupForm()
+
+    if form.validate_on_submit():
+        try:
+            user = User.signup(
+                username=form.username.data,
+                password=form.password.data,
+                email=form.email.data,
+                bio=form.bio.data,
+                image_url=form.image_url.data or User.image_url.default.arg,
+            )
+            db.session.commit()
+
+        except IntegrityError:
+            flash("Username already taken", 'danger')
+            return render_template('users/signup.html', form=form)
+
+        login_user(user)
+
+        flask.flash('Logged in successfully.')
+
+        return redirect("/")
+
+    else:
+        return render_template('users/signup.html', form=form)
