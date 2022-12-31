@@ -6,8 +6,10 @@ from flask_login import LoginManager
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, MessageForm, CSRFProtectForm, UpdateUserForm, RedirectForm
-from models import db, connect_db, User, Message
+from forms import UserSignupForm, LoginForm
+from models import db, connect_db, User
+
+app = Flask(__name__)
 
 load_dotenv()
 
@@ -17,7 +19,7 @@ login_manager.init_app(app)
 
 CURR_USER_KEY = "curr_user"
 
-app = Flask(__name__)
+
 
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
@@ -31,6 +33,15 @@ toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 db.create_all()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
+
+@app.get("/")
+def home():
+
+    return render_template('index.html')
 
 @app.route('/signup', methods = ['POST','GET'])
 def signup():
@@ -59,3 +70,12 @@ def signup():
 
     else:
         return render_template('users/signup.html', form=form)
+
+
+#############################################################################
+# api calls
+
+@app.post("/api/get_text")
+def get_text():
+    """ takes a request of a url and return text """
+    

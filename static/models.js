@@ -8,6 +8,6 @@ async function getTextFromURL(url) {
     const response = await axios({
         url: `${BASE_URL}/api/text`,
         data: url,
-        method: "GET",
+        method: "POST",
     });
 }

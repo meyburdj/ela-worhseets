@@ -33,7 +33,7 @@ function createButtonRow() {
 
 //takes raw text, splits it into an array of paragraphs, and filters away empty arrays
 function createParagraphArray(input) {
-    let textArrayRaw = input.split("\\n");
+    let textArrayRaw = input.split("\n");
     let textArrayFiltered = textArrayRaw.filter((str => str !== ""));
     return textArrayFiltered;
 }
@@ -88,8 +88,9 @@ function appendEmptyLine(parent) {
 //click that generates the text for the worksheet and the buttons to create questions/answers and to print
 $("#text-input-btn").on("click", function (e) {
     e.preventDefault();
+    $("#input-methods").addClass("d-none");
     createWorksheetText($("#text-input").val());
-    createButtonRow()
+    createButtonRow();
 })
 
 //click that allows the user access to the raw text method of worksheet genoratoring 
@@ -102,6 +103,15 @@ $("#url-api-select").on("click", function () {
     $("#url-api-method").removeClass("d-none")
 })
 
+//click that generates the text for the worksheet and the buttons to create questions/answers using the url method
+$("#url-submit-btn").on("click", async function (e) {
+    e.preventDefault();
+    const url = $("#url-submit-form").val();
+    const text = await getTextFromURL(url);
+    createWorksheetText(text);
+    createButtonRow()
+})
+
 //click used on the paragraph rows to allow the user to delete a paragraph
 $worksheetContainer.on("click", ".close-btn", function (evt) {
     $(evt.target).parent().remove();
@@ -111,10 +121,61 @@ $worksheetContainer.on("click", ".close-btn", function (evt) {
 
 //button to create short response question. clicking it creates an input field for a question and a confirm button. When you click confirm it adds a row, and then appends to that row a 1 column div with the number of the question, the question text that takes up 10 columns and an x icon one that can remove it if you want. The first two are content editable
 
-$("#short-response-btn").on("click", createShortResponseQuestion)
-
-function createShortResponseQuestion(e) {
+$worksheetContainer.on("click", "#short-response-btn", function (e) {
     e.preventDefault();
+    console.log("clicked");
+    questionNumber++;
+    appendTextRow($worksheetContainer, "row text-row");
+    appendOneColumn($(".text-row").last(), questionNumber);
+    $(".text-row").last().append(`
+    <form class="response-question-text col-7 row" >
+        <textarea class="form-control" type="text" placeholder="Enter question here"
+        class="response-question-input col-7" ></textarea>
+    <div class="row">
+      <div class="col-sm-10">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+          <label class="form-check-label" for="gridRadios1">
+            Sentence Answer
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+          <label class="form-check-label" for="gridRadios2">
+            Paragraph Answer
+          </label>
+        </div>
+        <button id="short-response-question-btn" type="button">Add question</button>
+      </div>
+        
+    </form>` );
+})
 
-}
+// $worksheetContainer.on("click", "#short-response-btn", function (e) {
+//     e.preventDefault();
+//     console.log("clicked");
+//     questionNumber++;
+//     appendOneColumn($(".text-row").last(), questionNumber);
+//     $(".text-row").last().append(`
+//     <form class="response-question-text col-7" >
+//         <textarea class="form-control" type="text" placeholder="Enter question here"
+//         class="response-question-input" rows="1"></textarea>
+//         <button id="short-response-question-btn" type="button">Add question</button>
+//     </form>` );
+// })
+
+let questionNumber = 0
+
+// function createShortResponseQuestion(e) {
+//     e.preventDefault();
+//     questionNumber++;
+//     appendOneColumn($(".text-row").last(), questionNumber);
+//     appendTenColumns($(".text-row").last(), `
+//     <form class="response-question-text">
+//         <textarea class="form-control" type="text" placeholder="Enter question here"
+//         class="response-question-input" rows="1"></textarea>
+//         <button id="short-response-question-btn">Enter</button>
+//     </form>` );
+// }
+
 

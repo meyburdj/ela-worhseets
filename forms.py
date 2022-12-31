@@ -10,8 +10,14 @@ class UserSignupForm(FlaskForm):
     bio = StringField('Bio')
     password1 = PasswordField('Password', validators = [DataRequired(), Length(min=6)])
     password2 = PasswordField('Confirm Password', validators = [DataRequired(),EqualTo('password1')])
-    submit = SubmitField('Register')
+    submit = StringField('Register')
     image_url = StringField('(Optional) Image URL')
+
+class LoginForm(FlaskForm):
+    """Login form."""
+
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[Length(min=6)])
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
@@ -28,16 +34,16 @@ def get_redirect_target():
             return target
 
 
-class RedirectForm(Form):
-    next = HiddenField()
+# class RedirectForm(Form):
+#     next = HiddenField()
 
-    def __init__(self, *args, **kwargs):
-        Form.__init__(self, *args, **kwargs)
-        if not self.next.data:
-            self.next.data = get_redirect_target() or ''
+#     def __init__(self, *args, **kwargs):
+#         Form.__init__(self, *args, **kwargs)
+#         if not self.next.data:
+#             self.next.data = get_redirect_target() or ''
 
-    def redirect(self, endpoint='index', **values):
-        if is_safe_url(self.next.data):
-            return redirect(self.next.data)
-        target = get_redirect_target()
-        return redirect(target or url_for(endpoint, **values))
+#     def redirect(self, endpoint='index', **values):
+#         if is_safe_url(self.next.data):
+#             return redirect(self.next.data)
+#         target = get_redirect_target()
+#         return redirect(target or url_for(endpoint, **values))

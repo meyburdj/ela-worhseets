@@ -8,12 +8,14 @@ from flask_sqlalchemy import SQLAlchemy
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
+DEFAULT_IMAGE_URL = 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.pursuit-of-happiness.org%2Fwp-content%2Fuploads%2F2010%2F11%2Fsocrates.jpg&imgrefurl=https%3A%2F%2Fwww.pursuit-of-happiness.org%2Fsocrates-on-happiness%2F&tbnid=yQJq4sWa58qAsM&vet=12ahUKEwiAponB7KH8AhUHo3IEHR-kDjkQMygTegUIARDzAQ..i&docid=VLd3aVpMARx5jM&w=963&h=627&q=socrates%20teaching&ved=2ahUKEwiAponB7KH8AhUHo3IEHR-kDjkQMygTegUIARDzAQ'
+
 # TODO: DEFAULT_IMAGE_URL = 
 
 class User(db.Model):
     """ Base user """
 
-    __tablename__ = "users",
+    __tablename__ = 'users'
 
     id = db.Column(
         db.Integer,
@@ -67,7 +69,7 @@ class User(db.Model):
     # )
 
     liked_worksheets = db.relationship(
-        'Message',
+        'Worksheet',
         secondary='likes',
         backref='likers'
     )
@@ -149,7 +151,7 @@ class Worksheet(db.Model):
 class Article(db.Model):
     """ Articles that have been accessed and parsed """
 
-    __tablename__ = articles
+    __tablename__ = 'articles'
 
     id = db.Column(
         db.Integer,
@@ -241,5 +243,15 @@ class Liked_Worksheet(db.Model):
 #         primary_key=True,
 #     )
 
+
+def connect_db(app):
+    """Connect this database to provided Flask app.
+
+    You should call this in your Flask app.
+    """
+
+    app.app_context().push()
+    db.app = app
+    db.init_app(app)
 
 
