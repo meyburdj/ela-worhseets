@@ -28,7 +28,6 @@ def espn_scrape(url):
 def grantland_scrape(url):
     """ Returns the article text from a url with the grantland domain """
     page = requests.get(url)
-    page.text
     soup = BeautifulSoup(page.text, 'html.parser')
     story = soup.select_one('.article-body').get_text()
 

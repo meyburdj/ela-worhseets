@@ -1,13 +1,14 @@
 import os
 from dotenv import load_dotenv
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
 from flask_login import LoginManager
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserSignupForm, LoginForm
 from models import db, connect_db, User
+from scrape import grantland_scrape
 
 app = Flask(__name__)
 
@@ -43,6 +44,12 @@ def home():
 
     return render_template('index.html')
 
+@app.get("/test")
+def test():
+
+    return render_template('test.html')
+
+
 @app.route('/signup', methods = ['POST','GET'])
 def signup():
     form = UserSignupForm()
@@ -75,7 +82,13 @@ def signup():
 #############################################################################
 # api calls
 
-@app.post("/api/get_text")
+@app.post("/api/get-article-text")
 def get_text():
     """ takes a request of a url and return text """
+
+    data = request.json
+    article_text = grantland_scrape(data)
+
+    return jsonify(article_text)
+
     

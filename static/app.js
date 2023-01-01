@@ -140,6 +140,18 @@ $worksheetContainer.on("click", ".close-question-btn", function (evt) {
 **/
 
 let questionNumber = 1
+
+
+$worksheetContainer.on("click", "#mult-choice-btn", function (e) {
+    e.preventDefault();
+    $(".questions-print-btns").addClass("d-none")
+    console.log("mult-choice-btn clicked");
+    appendTextRow($worksheetContainer, "row question-row");
+    appendOneColumn($(".question-row").last(), questionNumber);
+    addMultipleChoiceQuestionForm();
+})
+
+
 $worksheetContainer.on("click", "#short-response-btn", function (e) {
     e.preventDefault();
     $(".questions-print-btns").addClass("d-none")
@@ -147,11 +159,19 @@ $worksheetContainer.on("click", "#short-response-btn", function (e) {
     appendTextRow($worksheetContainer, "row question-row");
     appendOneColumn($(".question-row").last(), questionNumber);
     addResponseQuestionForm();
-
-
 })
 
-//adds an event listener to the button created when the form to add a question is created. The event listener adds that questionto the worksheet.
+//adds an event listener to the button created when the form to add a question is created. The event listener adds that multiple choice question to the worksheet.
+$worksheetContainer.on("click", "#multiple-choice-question-add-btn", function (e) {
+    e.preventDefault();
+    console.log("addmultiplechoicequestionbtnon has been activated")
+    addMultipleChoiceQuestion(questionNumber);
+    $(".question-row").remove()
+    $(".questions-print-btns").removeClass("d-none");
+    questionNumber++;
+})
+
+//adds an event listener to the button created when the form to add a question is created. The event listener adds the long response question to the worksheet.
 $worksheetContainer.on("click", "#response-question-add-btn", function (e) {
     e.preventDefault();
     console.log("addresponsequestionbtnon has been activated")
@@ -160,7 +180,30 @@ $worksheetContainer.on("click", "#response-question-add-btn", function (e) {
     $(".questions-print-btns").removeClass("d-none");
     questionNumber++;
 })
-// }
+
+/* 
+Takes the text from the question input field and attaches it to the dom with the four answer choices
+**/
+function addMultipleChoiceQuestion(questionNumber) {
+    console.log("addresponsequestion has been activated")
+    appendTextRow($("#question-section"), "row text-row");
+    appendOneColumn($(".text-row").last(), `Q. ${questionNumber}`);
+    appendTenColumns($(".text-row").last(), $(".multiple-choice-question-input").val());
+    appendIcon($(".text-row").last(), "col-1 bi bi-x btn close-question-btn");
+    appendOneColumn($(".text-row").last(), "a.");
+    appendTenColumns($(".text-row").last(), $(".multiple-choice-answer-a").val());
+    appendOneColumn($(".text-row").last())
+    appendOneColumn($(".text-row").last(), "b.");
+    appendTenColumns($(".text-row").last(), $(".multiple-choice-answer-b").val());
+    appendOneColumn($(".text-row").last())
+    appendOneColumn($(".text-row").last(), "c.");
+    appendTenColumns($(".text-row").last(), $(".multiple-choice-answer-c").val());
+    appendOneColumn($(".text-row").last())
+    appendOneColumn($(".text-row").last(), "d.");
+    appendTenColumns($(".text-row").last(), $(".multiple-choice-answer-d").val());
+    appendOneColumn($(".text-row").last())
+    appendEmptyLine($(".text-row").last());
+}
 
 /* 
 Takes the text from the question input field and attaches it to the dom with rows commensurate to the sentence response or paragraph response radio selection
@@ -168,14 +211,16 @@ Takes the text from the question input field and attaches it to the dom with row
 function addResponseQuestion(questionNumber) {
     console.log("addresponsequestion has been activated")
     appendTextRow($("#question-section"), "row text-row");
-    appendOneColumn($(".text-row").last(), questionNumber);
+    appendOneColumn($(".text-row").last(), `Q. ${questionNumber}`);
     appendTenColumns($(".text-row").last(), $(".response-question-input").val());
     appendIcon($(".text-row").last(), "col-1 bi bi-x btn close-question-btn");
     appendOneColumn($(".text-row").last());
-    $(".text-row").last().append($("<textarea>", {
-        class: "form-control col-10",
+    let answerSize = undefined;
+    $("#gridRadios1").is(":checked") ? answerSize = 50 : answerSize = 200;
+    $(".text-row").last().append($("<div>", {
+        class: "border border-dark col-10",
         type: "text",
-        rows: 5
+        style: `height: ${answerSize}`,
     }))
 
     appendEmptyLine($(".text-row").last());
@@ -184,26 +229,51 @@ function addResponseQuestion(questionNumber) {
 
 function addResponseQuestionForm() {
     $(".question-row").last().append(`
-    <form class="response-question-text col-10 row" >
-        <textarea class="form-control response-question-input" type="text" placeholder="Enter question here"
-         ></textarea>
-        <div class="row">
-         <div class="col-sm-10">
+<form class="response-question-text col-10 row">
+    <textarea class="form-control response-question-input" type="text" placeholder="Enter question here"></textarea>
+    <div class="row">
+        <div class="col-sm-10">
             <div class="form-check">
-            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-             <label class="form-check-label" for="gridRadios1">
-            Sentence Answer
-             </label>
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                <label class="form-check-label" for="gridRadios1">
+                    Sentence Answer
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                <label class="form-check-label" for="gridRadios2">
+                    Paragraph Answer
+                </label>
+            </div>
+            <button id="response-question-add-btn" type="button">Add question</button>
+            <button id="question-undo-btn" type="button">I don't want this question</button>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-          <label class="form-check-label" for="gridRadios2">
-            Paragraph Answer
-          </label>
-        </div>
-        <button id="response-question-add-btn" type="button">Add question</button>
-        <button id="response-question-undo-btn" type="button">I don't want this question</button>
-        </div>    
-    </form>`)
+</form> 
+    `)
 }
 
+function addMultipleChoiceQuestionForm() {
+    $(".question-row").last().append(`
+<form class="multiple-choice-question-text row col-10">
+
+    <textarea class="form-control multiple-choice-question-input " type="text"
+        placeholder="Enter question here"></textarea>
+    <textarea class="form-control multiple-choice-answer-a" type="text"
+        placeholder="Enter first answer option here"></textarea>
+    <textarea class="form-control multiple-choice-answer-b" type="text"
+        placeholder="Enter second answer option here"></textarea>
+    <textarea class="form-control multiple-choice-answer-c" type="text"
+        placeholder="Enter third answer option here"></textarea>
+    <textarea class="form-control multiple-choice-answer-d" type="text"
+        placeholder="Enter fourth answer option here"></textarea>
+
+    <div class="row">
+        <div class="col-sm-10">
+            <button id="multiple-choice-question-add-btn" type="button">Add question</button>
+            <button id="question-undo-btn" type="button">I don't want this question</button>
+        </div>
+    </div>
+
+</form>
+    `)
+}
