@@ -90,8 +90,20 @@ $("#text-input-btn").on("click", function (e) {
     e.preventDefault();
     $("#input-methods").addClass("d-none");
     createWorksheetText($("#text-input").val());
+    $worksheetContainer.append($("<div>", {
+        class: "row",
+        id: "question-section"
+    }))
+    $("#question-section").append($("<h2>", {
+        class: "row d-flex justify-content-center",
+        id: "question-section",
+        text: "Questions"
+    }))
+
     createButtonRow();
 })
+
+
 
 //click that allows the user access to the raw text method of worksheet genoratoring 
 $("#raw-text-select").on("click", function () {
@@ -117,27 +129,71 @@ $worksheetContainer.on("click", ".close-btn", function (evt) {
     $(evt.target).parent().remove();
 })
 
+$worksheetContainer.on("click", ".close-question-btn", function (evt) {
+    $(evt.target).parent().remove();
+    questionNumber--;
+})
 
 
-//button to create short response question. clicking it creates an input field for a question and a confirm button. When you click confirm it adds a row, and then appends to that row a 1 column div with the number of the question, the question text that takes up 10 columns and an x icon one that can remove it if you want. The first two are content editable
 
+/*button to create short response question. clicking it creates an input field for a question and a confirm button. When you click confirm it adds a row, and then appends to that row a 1 column div with the number of the question, the question text that takes up 10 columns and an x icon one that can remove it if you want. The first two are content editable
+**/
+
+let questionNumber = 1
 $worksheetContainer.on("click", "#short-response-btn", function (e) {
     e.preventDefault();
+    $(".questions-print-btns").addClass("d-none")
     console.log("clicked");
+    appendTextRow($worksheetContainer, "row question-row");
+    appendOneColumn($(".question-row").last(), questionNumber);
+    addResponseQuestionForm();
+
+
+})
+
+//adds an event listener to the button created when the form to add a question is created. The event listener adds that questionto the worksheet.
+$worksheetContainer.on("click", "#response-question-add-btn", function (e) {
+    e.preventDefault();
+    console.log("addresponsequestionbtnon has been activated")
+    addResponseQuestion(questionNumber);
+    $(".question-row").remove()
+    $(".questions-print-btns").removeClass("d-none");
     questionNumber++;
-    appendTextRow($worksheetContainer, "row text-row");
+})
+// }
+
+/* 
+Takes the text from the question input field and attaches it to the dom with rows commensurate to the sentence response or paragraph response radio selection
+**/
+function addResponseQuestion(questionNumber) {
+    console.log("addresponsequestion has been activated")
+    appendTextRow($("#question-section"), "row text-row");
     appendOneColumn($(".text-row").last(), questionNumber);
-    $(".text-row").last().append(`
-    <form class="response-question-text col-7 row" >
-        <textarea class="form-control" type="text" placeholder="Enter question here"
-        class="response-question-input col-7" ></textarea>
-    <div class="row">
-      <div class="col-sm-10">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-          <label class="form-check-label" for="gridRadios1">
+    appendTenColumns($(".text-row").last(), $(".response-question-input").val());
+    appendIcon($(".text-row").last(), "col-1 bi bi-x btn close-question-btn");
+    appendOneColumn($(".text-row").last());
+    $(".text-row").last().append($("<textarea>", {
+        class: "form-control col-10",
+        type: "text",
+        rows: 5
+    }))
+
+    appendEmptyLine($(".text-row").last());
+}
+
+
+function addResponseQuestionForm() {
+    $(".question-row").last().append(`
+    <form class="response-question-text col-10 row" >
+        <textarea class="form-control response-question-input" type="text" placeholder="Enter question here"
+         ></textarea>
+        <div class="row">
+         <div class="col-sm-10">
+            <div class="form-check">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+             <label class="form-check-label" for="gridRadios1">
             Sentence Answer
-          </label>
+             </label>
         </div>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
@@ -145,37 +201,9 @@ $worksheetContainer.on("click", "#short-response-btn", function (e) {
             Paragraph Answer
           </label>
         </div>
-        <button id="short-response-question-btn" type="button">Add question</button>
-      </div>
-        
-    </form>` );
-})
-
-// $worksheetContainer.on("click", "#short-response-btn", function (e) {
-//     e.preventDefault();
-//     console.log("clicked");
-//     questionNumber++;
-//     appendOneColumn($(".text-row").last(), questionNumber);
-//     $(".text-row").last().append(`
-//     <form class="response-question-text col-7" >
-//         <textarea class="form-control" type="text" placeholder="Enter question here"
-//         class="response-question-input" rows="1"></textarea>
-//         <button id="short-response-question-btn" type="button">Add question</button>
-//     </form>` );
-// })
-
-let questionNumber = 0
-
-// function createShortResponseQuestion(e) {
-//     e.preventDefault();
-//     questionNumber++;
-//     appendOneColumn($(".text-row").last(), questionNumber);
-//     appendTenColumns($(".text-row").last(), `
-//     <form class="response-question-text">
-//         <textarea class="form-control" type="text" placeholder="Enter question here"
-//         class="response-question-input" rows="1"></textarea>
-//         <button id="short-response-question-btn">Enter</button>
-//     </form>` );
-// }
-
+        <button id="response-question-add-btn" type="button">Add question</button>
+        <button id="response-question-undo-btn" type="button">I don't want this question</button>
+        </div>    
+    </form>`)
+}
 
