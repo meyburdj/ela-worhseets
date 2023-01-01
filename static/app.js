@@ -120,7 +120,7 @@ $("#url-submit-btn").on("click", async function (e) {
     e.preventDefault();
     const url = $("#url-submit-form").val();
     const text = await getTextFromURL(url);
-    createWorksheetText(text);
+    createWorksheetText(text.data);
     createButtonRow()
 })
 

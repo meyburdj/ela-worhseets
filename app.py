@@ -87,7 +87,7 @@ def get_text():
     """ takes a request of a url and return text """
 
     data = request.json
-    article_text = grantland_scrape(data)
+    article_text = grantland_scrape(data["url"])
 
     return jsonify(article_text)
 
