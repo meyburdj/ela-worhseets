@@ -1,6 +1,7 @@
 """SQLAlchemy models for ELAWorksheets."""
 
 from datetime import datetime
+from flask_login import UserMixin
 
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -12,7 +13,7 @@ DEFAULT_IMAGE_URL = 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.purs
 
 # TODO: DEFAULT_IMAGE_URL = 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     """ Base user """
 
     __tablename__ = 'users'
@@ -70,7 +71,7 @@ class User(db.Model):
 
     liked_worksheets = db.relationship(
         'Worksheet',
-        secondary='likes',
+        secondary='liked_worksheets',
         backref='likers'
     )
 
@@ -78,7 +79,7 @@ class User(db.Model):
         return f"<User #{self.id}: {self.username}, {self.email}>"
 
     @classmethod
-    def signup(cls, username, email, password, image_url=DEFAULT_IMAGE_URL):
+    def signup(cls, username, email, password, bio="", image_url=DEFAULT_IMAGE_URL):
         """Sign up user.
 
         Hashes password and adds user to system.
@@ -131,6 +132,16 @@ class Worksheet(db.Model):
         primary_key=True,
     )
 
+    title = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    age_level = db.Column(
+        db.Text,
+        nullable=False
+    )
+
     worksheet_text = db.Column(
         db.Text,
         nullable=False,
@@ -142,6 +153,7 @@ class Worksheet(db.Model):
         default=datetime.utcnow,
     )
 
+    
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id', ondelete='CASCADE'),

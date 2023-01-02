@@ -89,6 +89,10 @@ function appendEmptyLine(parent) {
 $("#text-input-btn").on("click", function (e) {
     e.preventDefault();
     $("#input-methods").addClass("d-none");
+    $("#raw-text-method").addClass("d-none");
+    $("#url-api-method").addClass("d-none");
+    $(".title").text($(".worksheet-title").val())
+    $('.title').attr('contenteditable', 'true')
     createWorksheetText($("#text-input").val());
     $worksheetContainer.append($("<div>", {
         class: "row",
@@ -118,7 +122,12 @@ $("#url-api-select").on("click", function () {
 //click that generates the text for the worksheet and the buttons to create questions/answers using the url method
 $("#url-submit-btn").on("click", async function (e) {
     e.preventDefault();
-    const url = $("#url-submit-form").val();
+    $("#input-methods").addClass("d-none");
+    $("#raw-text-method").addClass("d-none");
+    $("#url-api-method").addClass("d-none");
+    $(".title").text($(".worksheet-title").val())
+    $('.title').attr('contenteditable', 'true')
+    let url = $("#url-submit-form").val();
     const text = await getTextFromURL(url);
     createWorksheetText(text.data);
     createButtonRow()
@@ -277,3 +286,12 @@ function addMultipleChoiceQuestionForm() {
 </form>
     `)
 }
+
+
+$("#print-btn").on("click", function (e) {
+    e.preventDefault();
+    $(".navbar").addClass("d-none");
+    $(".close-btn").addClass("d-none");
+    $(".questions-print-btns").addClass("d-none");
+
+})

@@ -5,12 +5,11 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 
 class UserSignupForm(FlaskForm):
-    username = StringField('username', validators =[DataRequired()])
+    username = StringField('Username', validators =[DataRequired()])
     email = StringField('Email', validators=[DataRequired(),Email()])
-    bio = StringField('Bio')
-    password1 = PasswordField('Password', validators = [DataRequired(), Length(min=6)])
-    password2 = PasswordField('Confirm Password', validators = [DataRequired(),EqualTo('password1')])
-    submit = StringField('Register')
+    password = PasswordField('Password', validators = [DataRequired(), Length(min=6)])
+    password2 = PasswordField('Confirm Password', validators = [DataRequired(),EqualTo('password')])
+    bio = StringField('(Optional) Bio')
     image_url = StringField('(Optional) Image URL')
 
 class LoginForm(FlaskForm):
@@ -33,7 +32,8 @@ def get_redirect_target():
         if is_safe_url(target):
             return target
 
-
+class CSRFProtectForm(FlaskForm):
+    """Form just for CSRF Protection"""
 # class RedirectForm(Form):
 #     next = HiddenField()
 

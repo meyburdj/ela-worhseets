@@ -1,0 +1,76 @@
+<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="app.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="https://www.unpkg.com/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Lounge</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand">
+        <div class="container-fluid">
+
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/worksheets">Worksheets</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Lounges
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Teacher Lounges</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Parent Lounges</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Student Lounges</a>
+                    </div>
+                </li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right ">
+
+                {% if current_user.is_authenticated %}
+                <li><a class="nav-link" href="/worksheets/{{current_user.name}}">My Worksheets</a></li>
+                <form method="POST" action="/logout">
+                    {{ g.csrf_form.hidden_tag() }}
+                    <li><button class="btn btn-info">logout</button></li>
+                </form>
+                {% else %}
+                <li class="nav-link"><a href="/signup">Sign up</a></li>
+                <li class="nav-link"><a href="/login">Log in</a></li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <script src="static/models.js"></script>
+    <script src="static/app.js"></script>
+
+
+</body>
+
+</html>

@@ -60,5 +60,8 @@ def politico_scrape(url):
 
     
 
-
+host_names = {
+    'grantland.com': grantland_scrape,
+    'www.politico.com': politico_scrape
+}
     
