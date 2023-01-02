@@ -14,6 +14,16 @@ async function getTextFromURL(url) {
     return response;
 }
 
+async function addWorksheet(worksheetTitle, worksheetText, numberOfQuestions, gradeLevel) {
+    const response = await axios.post(`${BASE_URL}/api/add-worksheet`, {
+        "title": worksheetTitle,
+        "grade_level": gradeLevel,
+        "worksheet_text": worksheetText,
+        "question_count": numberOfQuestions
+    });
+    return response;
+}
+
 function test() {
     console.log("this is a test")
 }

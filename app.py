@@ -118,4 +118,28 @@ def get_text():
 
     return jsonify(article_text)
 
+@app.post("/api/add-worksheet")
+def add_worksheet():
+    """ adds a worksheet to the database """
+
+    title = request.json["title"]
+    grade_level = request.json["grade_level"]
+    worksheet_text = request.json["worksheet_text"]
+    question_count = request.json["question_count"]
+    user_id = current_user.id
+
+    worksheet = Worksheet(
+      title=title,
+      grade_level=grade_level,
+      worksheet_text=worksheet_text,
+      question_count=question_count,
+      user_id=user_id  
+    )
+
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect("/")
+
+
     

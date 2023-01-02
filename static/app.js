@@ -27,6 +27,7 @@ function createButtonRow() {
     const $postTextBtns = $(".questions-print-btns");
     appendBtn($postTextBtns, btnClasses, "Create multiple choice question", "mult-choice-btn");
     appendBtn($postTextBtns, btnClasses, "Create short response question", "short-response-btn");
+    appendBtn($postTextBtns, btnClasses, "Save worksheet", "save-worksheet");
     appendBtn($postTextBtns, btnClasses, "Print Worksheet", "print-btn");
 
 }
@@ -133,6 +134,7 @@ $("#url-submit-btn").on("click", async function (e) {
     createButtonRow()
 })
 
+
 //click used on the paragraph rows to allow the user to delete a paragraph
 $worksheetContainer.on("click", ".close-btn", function (evt) {
     $(evt.target).parent().remove();
@@ -188,6 +190,14 @@ $worksheetContainer.on("click", "#response-question-add-btn", function (e) {
     $(".question-row").remove()
     $(".questions-print-btns").removeClass("d-none");
     questionNumber++;
+})
+
+//adds an event listener to the button created when the form to add a question is created. The event listener removes the action of adding a new question to the worksheet.
+$worksheetContainer.on("click", "#question-undo-btn", function (e) {
+    e.preventDefault();
+    console.log("undo btn has been activated")
+    $(".question-row").remove()
+    $(".questions-print-btns").removeClass("d-none");
 })
 
 /* 
@@ -288,10 +298,22 @@ function addMultipleChoiceQuestionForm() {
 }
 
 
-$("#print-btn").on("click", function (e) {
+$worksheetContainer.on("click", "#print-btn", function (e) {
     e.preventDefault();
     $(".navbar").addClass("d-none");
     $(".close-btn").addClass("d-none");
     $(".questions-print-btns").addClass("d-none");
+    window.print();
+    $(".navbar").removeClass("d-none");
+    $(".close-btn").removeClass("d-none");
+    $(".questions-print-btns").removeClass("d-none");
+})
 
+$worksheetContainer.on("click", "#save-worksheet", async function (e) {
+    e.preventDefault();
+    const worksheetTitle = $("#title").val();
+    const worksheetText = $("final-worksheet-container").html()
+    const numberOfQuestions = questionNumber;
+    const gradeLevel = $("#grade-level").val();
+    await addWorksheet(worksheetTitle, worksheetText, numberOfQuestions, gradeLevel)
 })
